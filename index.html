@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+
+        .slider {
+          width: 600px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="constants.js"></script>
+    <script src="mercury.js"></script>
+    <script src="venus.js"></script>
+    <script src="earth.js"></script>
+    <script src="mars.js"></script>
+    <script src="jupiter.js"></script>
+    <script src="saturn.js"></script>
+    <script src="uranus.js"></script>
+    <script src="neptune.js"></script>
+</head>
+<body>
+<canvas id="canvas" width="640" height="540"></canvas>
+<div>Orbits Scale: <span id="scale"></span></div>
+<div class="slider" id="scale_slider"></div>
+<div>Planet Radius Scale: <span id="radius_scale"></span></div>
+<div class="slider" id="radius_scale_slider"></div>
+<div>Time: <span id="time"></span></div>
+<div class="slider" id="time_slider"></div>
+
+<script>
+var center_x = 320;
+var center_y = 270;
+var scale = 25.0;
+radius_scale = 10000000;
+var time_scale = 10000000000;
+
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+var base_time = Date.now();
+
+function draw(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  mercury_pos = mercury(t);
+  mercury_x = mercury_pos[0];
+  mercury_y = mercury_pos[1];
+  mercury_z = mercury_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(mercury_x * mercury_x + mercury_y * mercury_y) , 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + mercury_x * scale, center_y + scale * mercury_y, radius_scale * scale / au * mercury_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  venus_pos = venus(t);
+  venus_x = venus_pos[0];
+  venus_y = venus_pos[1];
+  venus_z = venus_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(venus_x * venus_x + venus_y * venus_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + venus_x * scale, center_y + scale * venus_y, radius_scale * scale / au * venus_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  earth_pos = earth(t);
+  earth_x = earth_pos[0];
+  earth_y = earth_pos[1];
+  earth_z = earth_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(earth_x * earth_x + earth_y * earth_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + earth_x * scale, center_y + scale * earth_y, radius_scale * scale / au, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  mars_pos = mars(t);
+  mars_x = mars_pos[0];
+  mars_y = mars_pos[1];
+  mars_z = mars_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(mars_x * mars_x + mars_y * mars_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + mars_x * scale, center_y + scale * mars_y, radius_scale * scale / au * mars_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  jupiter_pos = jupiter(t);
+  jupiter_x = jupiter_pos[0];
+  jupiter_y = jupiter_pos[1];
+  jupiter_z = jupiter_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(jupiter_x * jupiter_x + jupiter_y * jupiter_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + jupiter_x * scale, center_y + scale * jupiter_y, radius_scale * scale / au * jupiter_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  saturn_pos = saturn(t);
+  saturn_x = saturn_pos[0];
+  saturn_y = saturn_pos[1];
+  saturn_z = saturn_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(saturn_x * saturn_x + saturn_y * saturn_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + saturn_x * scale, center_y + scale * saturn_y, radius_scale * scale / au * saturn_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  uranus_pos = uranus(t);
+  uranus_x = uranus_pos[0];
+  uranus_y = uranus_pos[1];
+  uranus_z = uranus_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(uranus_x * uranus_x + uranus_y * uranus_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + uranus_x * scale, center_y + scale * uranus_y, radius_scale * scale / au * uranus_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+  neptune_pos = neptune(t);
+  neptune_x = neptune_pos[0];
+  neptune_y = neptune_pos[1];
+  neptune_z = neptune_pos[2];
+
+  ctx.beginPath();
+  ctx.arc(center_x, center_y, scale * Math.sqrt(neptune_x * neptune_x + neptune_y * neptune_y), 0, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(center_x + neptune_x * scale, center_y + scale * neptune_y, radius_scale * scale / au * neptune_r / earth_r, 0, 2 * Math.PI, false);
+  ctx.fill();
+
+
+}
+
+
+time = 0.0;
+
+function redraw() {
+  console.log(scale);
+  console.log(time);
+  draw(time);
+}
+redraw();
+
+$(function() {
+  $("#time_slider").slider({
+    change: function() {
+      var val = $("#time_slider").slider("value") * time_scale;
+      time = jd_for(base_time + val);
+      $("#time").text(new Date(base_time + val));
+      redraw();
+    },
+    slide: function() {
+      var val = $("#time_slider").slider("value") * time_scale;
+      time = jd_for(base_time + val);
+      $("#time").text(new Date(base_time + val));
+      redraw();
+    },
+    value: 0.0,
+    step: 0.01
+  });
+  $("#scale_slider").slider({
+    change: function() {
+      scale = $("#scale_slider").slider("value");
+      $("#scale").text("" + scale + " pixels / au");
+      redraw();
+    },
+    slide: function() {
+      scale = $("#scale_slider").slider("value");
+      $("#scale").text("" + scale + " pixels / au");
+      redraw();
+    },
+    value: 25.0
+  });
+  $("#radius_scale_slider").slider({
+    change: function() {
+      radius_scale = $("#radius_scale_slider").slider("value") * 1000000;
+      $("#radius_scale").text("" + (radius_scale * scale / au) + " pixels / au");
+      redraw();
+    },
+    slide: function() {
+      radius_scale = $("#radius_scale_slider").slider("value") * 1000000;
+      $("#radius_scale").text("" + (radius_scale * scale / au) + " pixels / au");
+      redraw();
+    },
+    value: 10.0
+  });
+  $("#time").text(new Date(base_time));
+  $("#scale").text("" + scale + " pixels / au");
+  $("#radius_scale").text("" + (radius_scale * scale / au) + " pixels / au");
+});
+</script>
+</body>
+</html>
