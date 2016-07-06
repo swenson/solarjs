@@ -193,7 +193,7 @@ $(function() {
     },
     slide: function() {
       radius_scale = $("#radius_scale_slider").slider("value") * 1000000;
-      $("#radius_scale").text("" + (radius_scale * scale / au) + " pixels / au");
+      $("#radius_scale").text("" + (radius_scale * scale / au) + " earth radius = pixels");
       redraw();
     },
     value: 10.0
